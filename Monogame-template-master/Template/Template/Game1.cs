@@ -11,6 +11,8 @@ namespace Template
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        
+
         //Används som texture
         Texture2D Pixel;
 
@@ -62,6 +64,10 @@ namespace Template
             //Generarar kartan (10 betyder att värje 1a i arrayen blir 10 pixlar sotor fyrkant
             map.Generate(maparray, 10);
 
+            //Laddar in bilden på spelaren
+            Player = Content.Load<Texture2D>("background-black-5");
+            CreatePixel();
+
 
         }
 
@@ -87,6 +93,8 @@ namespace Template
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             spriteBatch.Begin();
+
+            
 
             //Ritar ut kartan 
             map.Draw(spriteBatch);
