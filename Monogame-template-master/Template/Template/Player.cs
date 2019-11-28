@@ -11,13 +11,15 @@ namespace Template
 {
     class Player
     {
-
+        //Spelarens textur och position
         private Texture2D texture;
         private Vector2 position;
+        private Vector2 velocity;
 
         public Player(Texture2D texture)
         {
             this.texture = texture;
+            position = new Vector2(-20, 230);
         }
 
         public void Update()
@@ -26,10 +28,7 @@ namespace Template
         }
         public  void Draw(SpriteBatch spriteBatch)
         {
-           
-
-
-           
+            spriteBatch.Draw(texture, position, Color.White);
         }
 
     }
