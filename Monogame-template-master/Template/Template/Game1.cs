@@ -83,7 +83,10 @@ namespace Template
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update();
+            player.Update(map);
+
+            
+
 
             base.Update(gameTime);
         }

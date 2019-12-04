@@ -28,12 +28,19 @@ namespace Template {
         public void Draw(SpriteBatch spriteBatch) {
             spriteBatch.Draw(Pixel, rectangle, Color.White);
         }
+
+        public Rectangle GetRectangle() {
+            return Rectangle;
+        }
+
     }
 
     class ColisionTiles : Tiles {
         public ColisionTiles(int i, Rectangle newRectangle) {
             this.Rectangle = newRectangle;
         }
+
+
 
     }
 }
