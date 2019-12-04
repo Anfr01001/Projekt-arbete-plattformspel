@@ -65,7 +65,7 @@ namespace Template
 
             Texture2D texture = Content.Load<Texture2D>("Player");
 
-            player = new Player(texture);
+            player = new Player(Pixel);
 
             CreatePixel();
 
@@ -83,7 +83,7 @@ namespace Template
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            
+            player.Update();
 
             base.Update(gameTime);
         }

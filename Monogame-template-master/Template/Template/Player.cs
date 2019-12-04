@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace Template
@@ -13,22 +14,45 @@ namespace Template
     {
         //Spelarens textur och position
         private Texture2D texture;
-        private Vector2 position;
+        private Rectangle rec = new Rectangle(10,10,10,10); //x,y,size,size
+
+        public Rectangle Rec {
+            get { return rec; }
+        }
+
         private Vector2 velocity;
+        private KeyboardState kState;
 
         public Player(Texture2D texture)
         {
             this.texture = texture;
-            position = new Vector2(-20, 230);
+           
+        }
+
+        public void move() {
+
+            kState = Keyboard.GetState();
+
+            if (kState.IsKeyDown(Keys.A))
+                rec.X -= 3;
+            if (kState.IsKeyDown(Keys.D))
+                rec.X += 3;
+            //hoppa ?? knapp??
+            if (kState.IsKeyDown(Keys.W))
+                rec.Y -= 3;
+            //temp ska falla nedåt 
+            if (kState.IsKeyDown(Keys.S))
+                rec.Y += 3;
+
         }
 
         public void Update()
         {
-
+            move();
         }
         public  void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, Color.White);
+            spriteBatch.Draw(texture, rec, Color.White);
         }
 
     }
