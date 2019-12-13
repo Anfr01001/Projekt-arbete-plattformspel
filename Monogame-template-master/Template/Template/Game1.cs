@@ -18,6 +18,8 @@ namespace Template
         Map map;
         int[,] maparray;
 
+        Camera camera = new Camera(new Viewport());
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -85,7 +87,9 @@ namespace Template
 
             player.Update(map);
 
-            
+            camera.UpdateCamera(GraphicsDevice.Viewport);
+
+            camera.Position = player.Rec.Location.ToVector2();
 
 
             base.Update(gameTime);
@@ -96,11 +100,12 @@ namespace Template
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, camera.Transform);
 
             //Ritar ut kartan 
             map.Draw(spriteBatch);
             player.Draw(spriteBatch);
+
             spriteBatch.End();
 
             base.Draw(gameTime);

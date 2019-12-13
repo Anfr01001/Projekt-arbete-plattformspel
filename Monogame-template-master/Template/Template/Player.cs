@@ -66,7 +66,7 @@ namespace Template
             }
                 
 
-            //"gavitation"
+            //"gravitation"
             if (velocity.Y < 3)
                 velocity.Y += 1;
 
@@ -80,7 +80,7 @@ namespace Template
                 }
             }
 
-            //Kolla om kolitionen sker underifrån i så fall ska man kunna gå
+            //Kolla om kolisionen sker underifrån i så fall ska man kunna gå
             CanMoveX = true;
             foreach (Rectangle tile in tempLista) {
                 if (tile.Y - testrec.Y < 30)
