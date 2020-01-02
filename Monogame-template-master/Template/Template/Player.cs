@@ -18,6 +18,13 @@ namespace Template
         private Rectangle rec = new Rectangle(10,-70,20,40); //x,y,size,size
         private Vector2 pos;
 
+        private bool PlayerPush = false;
+        private Vector2 PlayerPushDirection;
+
+        public Vector2 Pos {
+            get { return pos; }
+        }
+
         private Rectangle testrec = new Rectangle(10,-70,20,40);
         private bool CanMove = true;
         private bool CanMoveX = true;
@@ -90,7 +97,24 @@ namespace Template
             tempLista.Clear();
 
             pos = new Vector2(testrec.X, testrec.Y);
+
+            //Om skott träffar spelaren putta honnom
+            if (PlayerPush) {
+                velocity += (-PlayerPushDirection * 13);
+                PlayerPush = false;
+            }
+
             pos += velocity;
+
+            //Agerar som luftmotstånd
+            if (velocity.X > 0) {
+                velocity.X -= 0.3f;
+            }
+
+            if (velocity.X < 0) {
+                velocity.X += 0.3f;
+            }
+
 
 
             if (CanMove) {
@@ -109,6 +133,12 @@ namespace Template
 
         }
 
+        public void pushPlayer(Vector2 riktning) {
+            PlayerPush = true;
+
+            PlayerPushDirection = riktning;
+        }
+
         public void Update(Map map)
         {
             move(map);
@@ -116,6 +146,8 @@ namespace Template
         }
         public  void Draw(SpriteBatch spriteBatch)
         {
+
+            
             spriteBatch.Draw(texture, rec, Color.Yellow);
             //spriteBatch.Draw(texture, testrec, Color.Black);
         }

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 namespace Template {
     class Map {
 
+        int[,] map;
+
         private List<ColisionTiles> colisionTiles = new List<ColisionTiles>();
 
         public List<ColisionTiles>  ColisionTiles {
@@ -23,10 +25,15 @@ namespace Template {
             get { return height; }
         }
 
+        public int[,] MapArray {
+            get { return map; }
+        }
+
         public Map() { }
 
         public void Generate(int[,] map, int size)
         {
+            this.map = map;
             //map.getLenght = bitmap kartan map 
             for (int x = 0; x < map.GetLength(1); x++) {
                 for (int y = 0; y < map.GetLength(0); y++) {
@@ -49,6 +56,7 @@ namespace Template {
 
         public void Generate(int[,] map, int size, bool Clear)
         {
+            this.map = map;
             //Clear används för att helt rita om mapen (när något strängs) (samma som ovan)
             if (Clear) { colisionTiles.Clear(); }
             for (int x = 0; x < map.GetLength(1); x++)
