@@ -9,6 +9,10 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Template {
+
+    /**
+    * Detta är spelets fiende och när den träffar marken förstörs marken och om spelaren skulle bli träffan blir spelaren knuffad 
+    **/
     class Fiende : ObjectBase {
         Random r = new Random();
         Player player;
@@ -25,14 +29,7 @@ namespace Template {
 
             angle = r.Next(0, 361);
 
-            // Ta reda på vad X respektive Y måste vara för att denna vinklen ska skapas och radien på cirklen ska vara 700
-            x = 0 + Math.Cos(angle) * radie;
-            y = 0 + Math.Sin(angle) * radie;
-            pos = new Vector2((float)x, (float)y); // gör om det till vector för att kunna användas
-
-            // Ställer in rotation mot spelaren och sedan gör om det till direction som sedan används för att uppdatera postionen i Update
-            Rotation = (float)Math.Atan2(pos.Y - player.Pos.Y, pos.X - player.Pos.X); // minus player pos
-            direction = new Vector2((float)Math.Cos(Rotation), (float)Math.Sin(Rotation));
+            direction = CalcDir(angle, player);
 
 
         }
@@ -41,7 +38,7 @@ namespace Template {
             
            rectangle = new Rectangle((int)pos.X, (int)pos.Y, 10, 10);
 
-           pos -= direction * speed; 
+           pos -= direction * speed;
 
            Colission();
         }
@@ -70,7 +67,8 @@ namespace Template {
                             if (mapX < 0) { mapX = 0; }
                             if (mapX > 79) { mapX = 79; }
                             if (mapY > 49) { mapY = 49; }
-                            
+                            if (mapY < 0) { mapY = 0; }
+
                             //ändra arrayen
                             maparray[mapY, mapX] = 0;
 

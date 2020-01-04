@@ -7,6 +7,10 @@ using System.Collections.Generic;
 namespace Template
 {
 
+    /**
+    * Målet med detta spel är att med sin karaktär hopparunt och gömma sig så lång tid som möjligt från fienden som förstör marken. 
+    **/
+
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
@@ -20,6 +24,9 @@ namespace Template
 
         List<Fiende> Fiendelista = new List<Fiende>();
         List<Fiende> DeadFiende = new List<Fiende>(); // object som ska tas bort
+
+        List<Helpobject> HelpBlocklista = new List<Helpobject>();
+        List<Helpobject> DeadHelpBlock = new List<Helpobject>(); // object som ska tas bort
 
         Random r = new Random();
 
@@ -100,7 +107,6 @@ namespace Template
                 Exit();
 
             player.Update(map);
-
             //uppdatera fiende
             foreach (Fiende fiende in Fiendelista) {
                 fiende.Update();
@@ -120,10 +126,30 @@ namespace Template
                 Fiendelista.Add(new Fiende(player, map));
             }
 
+            //uppdatera Helpblock
+            foreach (Helpobject helpblock in HelpBlocklista) {
+                helpblock.Update();
+                if (helpblock.Dead) {
+                    DeadHelpBlock.Add(helpblock);
+                }
+            }
+
+            //om de är döda ta bort här (för att int paja foreachloopen innan)
+            foreach (Helpobject helpblock in DeadHelpBlock) {
+                HelpBlocklista.Remove(helpblock);
+            }
+            DeadHelpBlock.Clear();
+
+            //"randomly" spawna in nya "hjälpblock"
+            if (r.Next(0, 200) == 1) {
+                HelpBlocklista.Add(new Helpobject(player, map));
+            }
 
             camera.UpdateCamera(GraphicsDevice.Viewport);
 
             camera.Position = player.Rec.Location.ToVector2();
+
+            //Skapa ett kriterie för game over...
 
             
             base.Update(gameTime);
@@ -142,6 +168,11 @@ namespace Template
 
             foreach (Fiende fiende in Fiendelista) {
                 fiende.Draw(spriteBatch);
+            }
+
+
+            foreach (Helpobject helpobject in HelpBlocklista) {
+                helpobject.Draw(spriteBatch);
             }
 
             spriteBatch.DrawString(Assets.UIFont, "Du har overlevt i " + Math.Round(gameTime.TotalGameTime.TotalSeconds) + "sekunder", new Vector2(player.Pos.X - 60, player.Pos.Y - 200), Color.White);
