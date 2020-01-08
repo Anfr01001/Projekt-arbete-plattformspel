@@ -40,6 +40,9 @@ namespace Template{
 
         }
 
+        public virtual void Update() {
+        }
+
         public bool Dead {
             get { return dead; }
             //set { dead = value; }

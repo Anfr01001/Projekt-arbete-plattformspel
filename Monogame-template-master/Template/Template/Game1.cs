@@ -22,13 +22,14 @@ namespace Template
 
         Fiende TestFiende; // fixa
 
-        List<Fiende> Fiendelista = new List<Fiende>();
-        List<Fiende> DeadFiende = new List<Fiende>(); // object som ska tas bort
-
-        List<Helpobject> HelpBlocklista = new List<Helpobject>();
-        List<Helpobject> DeadHelpBlock = new List<Helpobject>(); // object som ska tas bort
+        List<ObjectBase> UpdateLista = new List<ObjectBase>();
+        List<ObjectBase> DeadLista = new List<ObjectBase>();
 
         Random r = new Random();
+
+        double nextHelpBlock = 0;
+
+        bool gameOver = false;
 
 
         Map map;
@@ -107,49 +108,41 @@ namespace Template
                 Exit();
 
             player.Update(map);
-            //uppdatera fiende
-            foreach (Fiende fiende in Fiendelista) {
-                fiende.Update();
-                if (fiende.Dead) {
-                    DeadFiende.Add(fiende);
+
+            //Updatera Fiende och hjälp
+            foreach (ObjectBase thing in UpdateLista) {
+                thing.Update();
+                if(thing.Dead) {
+                    DeadLista.Add(thing);
                 }
             }
 
-            //om de är döda ta bort här (för att int paja foreachloopen innan)
-            foreach (Fiende fiende in DeadFiende) {
-                Fiendelista.Remove(fiende);
+            // Om blocken är döda ta bort dem från uppdateringslistan 
+            // Inte i samma loop för då fungerar ej foreach loopen korrekt
+            foreach (ObjectBase Deadthing in DeadLista) {
+                UpdateLista.Remove(Deadthing);
             }
-            DeadFiende.Clear();
+            DeadLista.Clear();
 
             //"randomly" spawna in nya fiende
             if (r.Next(0, 70) == 1) {
-                Fiendelista.Add(new Fiende(player, map));
+                UpdateLista.Add(new Fiende(player, map));
             }
 
-            //uppdatera Helpblock
-            foreach (Helpobject helpblock in HelpBlocklista) {
-                helpblock.Update();
-                if (helpblock.Dead) {
-                    DeadHelpBlock.Add(helpblock);
-                }
+            // Skapa ett "hjälpblock" var 10onde sekund;
+            if (gameTime.TotalGameTime.TotalSeconds > nextHelpBlock) {
+                UpdateLista.Add(new Helpobject(player, map));
+                nextHelpBlock += 10;
             }
 
-            //om de är döda ta bort här (för att int paja foreachloopen innan)
-            foreach (Helpobject helpblock in DeadHelpBlock) {
-                HelpBlocklista.Remove(helpblock);
-            }
-            DeadHelpBlock.Clear();
-
-            //"randomly" spawna in nya "hjälpblock"
-            if (r.Next(0, 200) == 1) {
-                HelpBlocklista.Add(new Helpobject(player, map));
+            //Kolla om spelaren är under kartan och där med förlorat
+            if (player.Pos.Y > 500) {
+                gameOver = true;
             }
 
             camera.UpdateCamera(GraphicsDevice.Viewport);
 
             camera.Position = player.Rec.Location.ToVector2();
-
-            //Skapa ett kriterie för game over...
 
             
             base.Update(gameTime);
@@ -166,19 +159,17 @@ namespace Template
             map.Draw(spriteBatch);
             player.Draw(spriteBatch);
 
-            foreach (Fiende fiende in Fiendelista) {
-                fiende.Draw(spriteBatch);
+            foreach (ObjectBase thing in UpdateLista) {
+                thing.Draw(spriteBatch);
             }
 
+            spriteBatch.DrawString(Assets.UIFont, "Du har overlevt i " + Math.Round(gameTime.TotalGameTime.TotalSeconds) + " sekunder", new Vector2(player.Pos.X - 80, player.Pos.Y - 250), Color.White);
 
-            foreach (Helpobject helpobject in HelpBlocklista) {
-                helpobject.Draw(spriteBatch);
+            // Om spelaren är under kartan och där med fallit av visa texten.
+            if (gameOver) {
+                spriteBatch.DrawString(Assets.UIFont, " Game Over starta om spelet ", new Vector2(player.Pos.X - 80, player.Pos.Y - 200), Color.White);
             }
 
-            spriteBatch.DrawString(Assets.UIFont, "Du har overlevt i " + Math.Round(gameTime.TotalGameTime.TotalSeconds) + "sekunder", new Vector2(player.Pos.X - 60, player.Pos.Y - 200), Color.White);
-
-            //spriteBatch.DrawString(Assets.UIFont, Vector2.Distance(player.Pos, TestFiende.Pos).ToString(), player.Pos, Color.White);
-            //spriteBatch.DrawString(Assets.UIFont, player.Pos.ToString(), player.Pos, Color.White);
 
             spriteBatch.End();
 

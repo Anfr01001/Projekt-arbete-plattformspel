@@ -34,7 +34,7 @@ namespace Template {
 
         }
 
-        public void Update() {
+        public override void Update() {
             
            rectangle = new Rectangle((int)pos.X, (int)pos.Y, 10, 10);
 
